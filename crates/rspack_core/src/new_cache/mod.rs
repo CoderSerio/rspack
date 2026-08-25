@@ -22,10 +22,8 @@ pub use idle_file_cache::IdleFileCache;
 pub use memory_cache::{MemoryCache, MemoryCacheGetResult};
 use rspack_fs::ReadableFileSystem;
 
-use self::snapshot::{BuildDeps, Snapshot};
-use crate::{
-  CompilationLogger, CompilationLogging, CompilerOptions, cache::persistent::codec::CacheCodec,
-};
+use self::snapshot::{BuildDeps, FileSystemInfo};
+use crate::{CompilationLogger, CompilationLogging, CompilerOptions, cache::CacheCodec};
 
 pub fn create_cache(
   compiler_path: String,
@@ -53,14 +51,18 @@ pub fn create_cache(
     None
   };
   let codec = Arc::new(CacheCodec::new(project_root));
-  let snapshot = Snapshot::new(options.snapshot.clone(), input_filesystem.clone());
+  let file_system_info = FileSystemInfo::new(
+    input_filesystem.clone(),
+    options.snapshot.clone(),
+    compiler_options.output.hash_function,
+  );
   let build_deps = BuildDeps::new(
     &options.build_dependencies,
     input_filesystem,
     CompilationLogger::new("rspack.newCache".to_string(), compilation_logging),
   );
   let (base_path, database_path) = match &options.storage {
-    crate::cache::persistent::storage::StorageOptions::FileSystem { directory } => {
+    crate::cache::StorageOptions::FileSystem { directory } => {
       let base_path = directory.parent().unwrap_or_else(|| {
         panic!("Persistent cache directory must have a parent directory: {directory}")
       });
@@ -73,7 +75,7 @@ pub fn create_cache(
     rspack_workspace::rspack_pkg_version!().to_string(),
     options.version.clone(),
     codec,
-    snapshot,
+    file_system_info,
     build_deps,
   ) {
     Ok(strategy) => strategy,

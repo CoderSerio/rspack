@@ -19,6 +19,13 @@ use crate::{get_chunk_runtime_requirements, runtime_module::unquoted_stringify};
 type GetChunkFilenameAllChunks = Box<dyn Fn(&RuntimeGlobals) -> bool + Sync + Send>;
 type GetFilenameForChunk = Box<dyn Fn(&Chunk, &Compilation) -> Option<Filename> + Sync + Send>;
 
+fn drop_dead_concat_operand(mut expression: String) -> String {
+  if expression.starts_with("\"\" + ") && expression.ends_with('"') {
+    drop(expression.drain(..5));
+  }
+  expression
+}
+
 #[impl_runtime_module]
 pub struct GetChunkFilenameRuntimeModule {
   #[cacheable(with=Unsupported)]
@@ -393,33 +400,35 @@ impl RuntimeModule for GetChunkFilenameRuntimeModule {
         };
         let chunk_runtime = chunk.runtime().as_str();
 
-        let filename = compilation
-          .get_path(
-            &Filename::from(if let Some(template) = fake_filename.template() {
-              rspack_util::json_stringify_str(template)
-            } else {
-              rspack_util::json_stringify_str(
-                fake_filename
-                  .render(
-                    PathData::default()
-                      .chunk(chunk.ukey(), compilation)
-                      .chunk_name_optional(chunk.name())
-                      .chunk_id_optional(chunk.id().map(|id| id.as_str())),
-                    None,
-                  )
-                  .await?
-                  .as_str(),
-              )
-            }),
-            PathData::default()
-              .chunk_id_optional(chunk_id.as_deref())
-              .chunk_hash_optional(chunk_hash.as_deref())
-              .chunk_name_optional(chunk_name.as_deref())
-              .hash(&full_hash)
-              .content_hash_optional(content_hash.as_deref())
-              .runtime(chunk_runtime),
-          )
-          .await?;
+        let filename = drop_dead_concat_operand(
+          compilation
+            .get_path(
+              &Filename::from(if let Some(template) = fake_filename.template() {
+                rspack_util::json_stringify_str(template)
+              } else {
+                rspack_util::json_stringify_str(
+                  fake_filename
+                    .render(
+                      PathData::default()
+                        .chunk(chunk.ukey(), compilation)
+                        .chunk_name_optional(chunk.name())
+                        .chunk_id_optional(chunk.id().map(|id| id.as_str())),
+                      None,
+                    )
+                    .await?
+                    .as_str(),
+                )
+              }),
+              PathData::default()
+                .chunk_id_optional(chunk_id.as_deref())
+                .chunk_hash_optional(chunk_hash.as_deref())
+                .chunk_name_optional(chunk_name.as_deref())
+                .hash(&full_hash)
+                .content_hash_optional(content_hash.as_deref())
+                .runtime(chunk_runtime),
+            )
+            .await?,
+        );
 
         if let Some(chunk_id) = chunk.id() {
           static_urls
@@ -440,7 +449,11 @@ impl RuntimeModule for GetChunkFilenameRuntimeModule {
       self.global.clone()
     };
 
-    let source = runtime_template.render(self.id(), Some(serde_json::json!({
+    let dynamic_url = drop_dead_concat_operand(
+      dynamic_url.unwrap_or_else(|| format!("\"\" + chunkId + \".{}\"", self.content_type)),
+    );
+
+    let mut source = runtime_template.render(self.id(), Some(serde_json::json!({
       "_global": match self.source_type {
         SourceType::JavaScript => runtime_template
           .render_runtime_global_definition(&RuntimeGlobals::GET_CHUNK_SCRIPT_FILENAME),
@@ -453,9 +466,12 @@ impl RuntimeModule for GetChunkFilenameRuntimeModule {
                         .iter()
                         .map(|(filename, chunk_ids)| stringify_static_chunk_map(filename, chunk_ids))
                         .join("\n"),
-      "_dynamic_url": dynamic_url.unwrap_or_else(|| format!("\"\" + chunkId + \".{}\"", self.content_type))
+      "_has_static_urls": !static_urls.is_empty(),
+      "_dynamic_url": dynamic_url
     })))?;
 
+    let trimmed_len = source.trim_end().len();
+    source.truncate(trimmed_len);
     Ok(source)
   }
 }

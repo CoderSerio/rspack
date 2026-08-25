@@ -959,6 +959,7 @@ export interface JsLinkPreloadData {
 export interface JsLoaderCacheEntry {
   content: null | string | Uint8Array
   sourceMap?: Uint8Array
+  parseMeta: Record<string, string>
 }
 
 export interface JsLoaderContext {

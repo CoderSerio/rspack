@@ -1,8 +1,11 @@
-use std::sync::{Arc, Mutex};
+use std::{
+  collections::HashMap,
+  sync::{Arc, Mutex},
+};
 
 use napi::bindgen_prelude::*;
 use napi_derive::napi;
-use rspack_cacheable::cacheable;
+use rspack_cacheable::{cacheable, with::AsMap};
 use rspack_core::{
   CacheFacade, CacheValue, Content, Etag, Resolver, loader_cache_etag, loader_cache_item,
 };
@@ -17,12 +20,15 @@ struct LoaderCacheEntry {
   content: Option<Vec<u8>>,
   content_is_string: bool,
   source_map: Option<Vec<u8>>,
+  #[cacheable(with=AsMap)]
+  parse_meta: HashMap<String, String>,
 }
 
 #[napi(object)]
 pub struct JsLoaderCacheEntry {
   pub content: Either3<Null, String, Uint8Array>,
   pub source_map: Option<Uint8Array>,
+  pub parse_meta: HashMap<String, String>,
 }
 
 #[napi]
@@ -182,6 +188,7 @@ impl JsLoaderCache {
         (Some(content), false) => Either3::C(content.clone().into()),
       },
       source_map: entry.source_map.clone().map(Into::into),
+      parse_meta: entry.parse_meta.clone(),
     }))
   }
 
@@ -200,6 +207,7 @@ impl JsLoaderCache {
       content,
       content_is_string,
       source_map: output.source_map.map(|source_map| source_map.to_vec()),
+      parse_meta: output.parse_meta,
     };
     let item_cache = loader_cache_item(&self.cache, &self.module_identifier, loader_name, etag);
     item_cache

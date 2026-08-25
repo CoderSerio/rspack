@@ -1,8 +1,8 @@
-use rspack_cacheable::cacheable;
+use rspack_cacheable::{cacheable, with::AsMap};
 use rspack_collections::Identifiable;
 use rspack_error::Result;
 use rspack_hash::{HashFunction, RspackHasher};
-use rspack_loader_runner::{Content, LoaderContext};
+use rspack_loader_runner::{Content, LoaderContext, ParseMeta};
 use rspack_sources::SourceMap;
 
 use crate::{CacheFacade, CacheValue, Etag, ItemCacheFacade, Module, RunnerContext};
@@ -45,6 +45,8 @@ struct LoaderCacheEntry {
   content: Option<Vec<u8>>,
   content_is_string: bool,
   source_map: Option<String>,
+  #[cacheable(with=AsMap)]
+  parse_meta: ParseMeta,
 }
 
 pub(crate) struct LoaderCacheMissState {
@@ -115,6 +117,7 @@ pub(crate) fn before_normal_loader(
       .source_map
       .clone()
       .and_then(|source_map| SourceMap::from_json(source_map).ok());
+    context.parse_meta = entry.parse_meta.clone();
     context.__finish_with((content, source_map, None));
     return Ok(LoaderCacheAction::Hit);
   }
@@ -131,7 +134,6 @@ pub(crate) fn after_normal_loader(
     || !context.context.module.build_info().assets.is_empty()
     || !context.context.module.build_info().extras.is_empty()
     || context.additional_data().is_some()
-    || !context.parse_meta.is_empty()
   {
     return Ok(());
   }
@@ -147,6 +149,7 @@ pub(crate) fn after_normal_loader(
     content,
     content_is_string,
     source_map: context.source_map().map(SourceMap::to_json),
+    parse_meta: context.parse_meta.clone(),
   };
   let loader_name = context.current_loader().loader_name();
   let module_identifier = context.context.module.identifier();

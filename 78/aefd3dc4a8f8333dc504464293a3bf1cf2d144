@@ -1,0 +1,42 @@
+tests/rspack-test/configCases/css/view-transitions/style.module.css
+  s_30982a48614034::t_dd52f25bc7d488 1-7
+crates/css-module-lexer/src/css_syntax.rs
+  s_30982a48614034::t_5e90a65bb305d4 1
+crates/rspack_plugin_css/src/parser_and_generator/parser.rs
+  s_30982a48614034::t_fd168a67ba9ba4 334-335,649-650
+  s_30982a48614034::t_ce0e35ee010045 319-333
+crates/css-module-lexer/src/dependency_types.rs
+  s_30982a48614034::t_c47ee472b48817 266-269
+tests/rspack-test/configCases/css/view-transitions/rspack.config.ts
+  s_30982a48614034::t_dd52f25bc7d488 1-20
+crates/css-module-lexer/src/dependencies.rs
+  s_30982a48614034::t_94139a76ed35bf 1801
+  s_30982a48614034::t_b8cf16b448665e 1353-1357,4408-4412,4704-4709
+  s_30982a48614034::t_b2d66a48f3a6be 4227-4228
+  s_30982a48614034::t_71f765eff56179 93-95,416,1341-1345,1358-1372,2064-2068,2225-2229,2280-2284
+  s_30982a48614034::t_c47ee472b48817 1373,1783-1800,1802-1803,1839-1848,2285,4229,4261-4273,4392-4406,4413,4430-4431,4433,4435,4698,4700-4703,4710-4714
+  s_30982a48614034::t_5e90a65bb305d4 4699
+  s_30982a48614034::t_e28d453bbff80e 2139-2145
+  s_30982a48614034::t_b56d75f4370502 4414-4429,4432
+  s_30982a48614034::t_ce0e35ee010045 4407
+  s_30982a48614034::t_f54670a191e185 1374-1375,1782,4434,4436
+  s_30982a48614034::t_b5a3cd689fb3b1 2138
+tests/rspack-test/configCases/css/view-transitions/index.js
+  s_30982a48614034::t_dd52f25bc7d488 1-11
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.24",
+  "base_commit_sha": "78aefd3dc4a8f8333dc504464293a3bf1cf2d144",
+  "prompts": {},
+  "sessions": {
+    "s_30982a48614034": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a18583-e7a9-7632-926c-1e55ba4ebce5",
+        "model": "gpt-6-astra"
+      },
+      "human_author": "亚亥yahai <shenyuyou@xiaohongshu.com>"
+    }
+  }
+}

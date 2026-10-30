@@ -1,0 +1,65 @@
+tests/rspack-test/configCases/css/pure-parser-options/errors.mjs
+  s_30982a48614034::t_7816b32482cbde 7-8
+crates/css-module-lexer/src/dependencies.rs
+  s_30982a48614034::t_94139a76ed35bf 1801
+  s_30982a48614034::t_b8cf16b448665e 1353-1357,4408-4412,4704-4709
+  s_30982a48614034::t_c47ee472b48817 1373,1783-1800,1802-1803,1839-1848,2285,4229,4261-4273,4392-4406,4413,4430-4431,4433,4435,4698,4700-4703,4710-4714
+  s_30982a48614034::t_71f765eff56179 93-95,416,1341-1345,1358-1372,2064-2068,2225-2229,2280-2284
+  s_30982a48614034::t_b56d75f4370502 4414-4429,4432
+  s_30982a48614034::t_5e90a65bb305d4 4699
+  s_30982a48614034::t_e28d453bbff80e 2139-2145
+  s_30982a48614034::t_b5a3cd689fb3b1 2138
+  s_30982a48614034::t_b2d66a48f3a6be 4227-4228
+  s_30982a48614034::t_ce0e35ee010045 4407
+  s_30982a48614034::t_f54670a191e185 1374-1375,1782,4434,4436
+tests/rspack-test/configCases/css/view-transitions/index.js
+  s_30982a48614034::t_b5a3cd689fb3b1 23,27
+  s_30982a48614034::t_5ee7f61080bda7 9,11-14,24-26,43-46
+  s_30982a48614034::t_dd52f25bc7d488 1-8,10,15-21,28-42,47-58
+  s_30982a48614034::t_c8b15515431e0d 22
+tests/rspack-test/configCases/css/pure-parser-options/index.js
+  s_30982a48614034::t_7816b32482cbde 11
+tests/rspack-test/configCases/css/view-transitions/pure.module.css
+  s_30982a48614034::t_dd52f25bc7d488 1-3
+crates/rspack_plugin_css/src/parser_and_generator/parser.rs
+  s_30982a48614034::t_ce0e35ee010045 319-333
+  s_30982a48614034::t_fd168a67ba9ba4 334-335,649-650
+website/docs/en/config/module-parser.mdx
+  s_30982a48614034::t_fcdefe05d82ee8 1403-1404
+  s_30982a48614034::t_dd52f25bc7d488 1306
+website/docs/zh/config/module-parser.mdx
+  s_30982a48614034::t_dd52f25bc7d488 1305
+  s_30982a48614034::t_fcdefe05d82ee8 1402-1403
+crates/css-module-lexer/src/css_syntax.rs
+  s_30982a48614034::t_5e90a65bb305d4 1
+tests/rspack-test/configCases/css/view-transitions/rspack.config.ts
+  s_30982a48614034::t_032aa1e26972c5 26
+  s_30982a48614034::t_dd52f25bc7d488 1-23,29-42
+  s_30982a48614034::t_419b4c0c44b538 24-25,27-28
+tests/rspack-test/configCases/css/pure-parser-options/view-transition-disabled.module.css
+  s_30982a48614034::t_7816b32482cbde 1-3
+crates/css-module-lexer/src/dependency_types.rs
+  s_30982a48614034::t_c47ee472b48817 266-269
+tests/rspack-test/configCases/css/pure-parser-options/rspack.config.ts
+  s_30982a48614034::t_7816b32482cbde 20-23
+  s_30982a48614034::t_2301a38fb7b045 19
+tests/rspack-test/configCases/css/view-transitions/style.module.css
+  s_30982a48614034::t_dd52f25bc7d488 1-33,35-71
+  s_30982a48614034::t_b8cf16b448665e 34
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.24",
+  "base_commit_sha": "795d5beb917fafeed76c8b79bf113543cb005c62",
+  "prompts": {},
+  "sessions": {
+    "s_30982a48614034": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a18583-e7a9-7632-926c-1e55ba4ebce5",
+        "model": "gpt-6-astra"
+      },
+      "human_author": "亚亥yahai <shenyuyou@xiaohongshu.com>"
+    }
+  }
+}
